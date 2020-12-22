@@ -229,11 +229,11 @@ func NewSprite() *Sprite {
 	return sprite
 }
 
-func newAnimation(path string, duration int, steps int, filter ebiten.Filter) *Animation {
+func newAnimation(path string, duration int, steps int) *Animation {
 	var err error
 	animation := new(Animation)
 	animation.Path = path
-	animation.Image, _, err = ebitenutil.NewImageFromFile(path, filter)
+	animation.Image, _, err = ebitenutil.NewImageFromFile(path)
 	if err != nil {
 		log.Fatal(err)
 	}
