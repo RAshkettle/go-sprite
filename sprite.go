@@ -5,7 +5,7 @@ Basic Usage :
 import "github.com/ryosama/go-sprite"
 
 mySprite = sprite.NewSprite()
-mySprite.AddAnimation("walk-right",	"walk_right.png", 700, 6, ebiten.FilterDefault)
+mySprite.AddAnimation("walk-right",	"walk_right.png", 700, 6)
 mySprite.Position(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 mySprite.CurrentAnimation = "walk-right"
 mySprite.Speed = 2
@@ -13,13 +13,14 @@ mySprite.Start()
 */package sprite
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"image"
 	"image/color"
 	"log"
 	"math"
 	"time"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	//"fmt"
 )
 
@@ -265,14 +266,12 @@ AddAnimation adds an animation to the sprite
 
 "steps" is the number of step for the animation
 
-"filter" is ebiten.FilterDefault or ebiten.FilterNearest  or ebiten.FilterLinear
-
 Example :
 
-mySprite.AddAnimation("walk-right",	"walk_right.png", 700, 6, ebiten.FilterDefault)
+mySprite.AddAnimation("walk-right",	"walk_right.png", 700, 6)
 */
-func (sprite *Sprite) AddAnimation(label string, path string, duration int, steps int, filter ebiten.Filter) {
-	sprite.Animations[label] = newAnimation(path, duration, steps, filter)
+func (sprite *Sprite) AddAnimation(label string, path string, duration int, steps int) {
+	sprite.Animations[label] = newAnimation(path, duration, steps)
 }
 
 /*
@@ -614,13 +613,14 @@ func (sprite *Sprite) Draw(surface *ebiten.Image) {
 		x0 := currentAnimation.CurrentStep * currentAnimation.StepWidth
 		x1 := x0 + currentAnimation.StepWidth
 		r := image.Rect(x0, 0, x1, currentAnimation.StepHeight)
-		options.SourceRect = &r
+		//options.SourceRect = &r
 
 		if sprite.Borders {
 			sprite.DrawBorders(surface, violet)
 		}
 
-		surface.DrawImage(currentAnimation.Image, options)
+		surface.DrawImage(currentAnimation.Image.SubImage(r).(*ebiten.Image), options)
+		//surface.DrawImage(currentAnimation.Image, options)
 
 		sprite.NextStep()
 	}
